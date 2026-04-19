@@ -1,0 +1,123 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# C extensions
+*.c
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Kivy/Buildozer
+bin/
+.buildozer/
+.gradle/
+.idea/
+*.pyc
+*.pyo
+
+# Android specific
+*.apk
+*.aab
+*.keystore
+*.jks
+local.properties
+keystore.properties
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+.directory
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Output files
+/output/
+~/ImagenCreator/output/
+*.png
+*.jpg
+*.wav
+*.mp3
+
+# Logs
+*.log
+logs/
+
+# IDE
+*.swp
+*.swo
+*~
+.vscode-remote/
+.remote-containers/
+
+# Java/Gradle (for Android build)
+.gradle
+.gradle/
+local.properties
+gradlew
+gradlew.bat
+
+# Python
+venv/
+ENV/
+env/
+.venv
+
+# Project specific
+output/
+temp/
+cache/

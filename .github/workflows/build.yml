@@ -1,0 +1,114 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v3
+    
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: ☕ Setup Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+    
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install buildozer cython
+    
+    - name: 🔧 Setup Android SDK
+      uses: android-actions/setup-android@v2
+      with:
+        api-level: 31
+        ndk-version: 25.2.9519653
+    
+    - name: 🛠️ Configure buildozer
+      run: |
+        mkdir -p ~/.buildozer
+        chmod +x buildozer.spec
+    
+    - name: 🔨 Build APK (Debug)
+      run: |
+        buildozer android debug
+      timeout-minutes: 60
+    
+    - name: 📤 Upload APK artifact
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: imagencreator-apk
+        path: bin/imagencreator-*.apk
+        retention-days: 30
+    
+    - name: 📊 Check build status
+      run: |
+        if [ -f bin/imagencreator-*-debug.apk ]; then
+          echo "✅ APK built successfully!"
+          ls -lh bin/imagencreator-*.apk
+        else
+          echo "❌ APK build failed!"
+          exit 1
+        fi
+    
+    - name: 📝 Create Release (on tag)
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: bin/imagencreator-*.apk
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v3
+    
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov pylint flake8
+    
+    - name: 🧪 Run unit tests
+      run: |
+        pytest tests/ -v --cov=src --cov-report=xml || true
+    
+    - name: 📋 Lint with pylint
+      run: |
+        pylint src/ --fail-under=7.0 || true
+    
+    - name: 🔍 Check code style with flake8
+      run: |
+        flake8 src/ --count --select=E9,F63,F7,F82 --show-source --statistics || true
+    
+    - name: 📊 Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.xml
+        fail_ci_if_error: false

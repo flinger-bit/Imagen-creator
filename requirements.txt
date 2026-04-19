@@ -1,0 +1,9 @@
+kivy==2.3.0
+Pillow==10.1.0
+numpy==1.24.3
+scipy==1.11.4
+pyttsx3==2.90
+pydub==0.25.1
+buildozer==1.5.0
+cython==3.0.5
+Jinja2==3.1.2
